@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        header {
+            background-color: #0056b3;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        main {
+            padding: 20px;
+        }
+        form {
+            margin: 20px auto;
+            max-width: 600px;
+            padding: 20px;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        form label {
+            display: block;
+            font-size: 16px;
+            margin: 10px 0 5px;
+        }
+        form input, form button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        form button {
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        form button:hover {
+            background-color: #004494;
+        }
+        table {
+            width: 100%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: white;
+        }
+        table th, table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        table th {
+            background-color: #0056b3;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Student Information Form</h1>
+    </header>
+    <main>
+        <form id="studentForm">
+            <label for="name">Student Name:</label>
+            <input type="text" id="name" placeholder="Enter student name" required>
+            
+            <label for="registerNumber">Register Number:</label>
+            <input type="text" id="registerNumber" placeholder="Enter register number" required>
+            
+            <label for="department">Department:</label>
+            <input type="text" id="department" placeholder="Enter department" required>
+            
+            <label for="marks1">Marks for Subject 1:</label>
+            <input type="number" id="marks1" placeholder="Enter marks for subject 1" required>
+            
+            <label for="marks2">Marks for Subject 2:</label>
+            <input type="number" id="marks2" placeholder="Enter marks for subject 2" required>
+            
+            <label for="marks3">Marks for Subject 3:</label>
+            <input type="number" id="marks3" placeholder="Enter marks for subject 3" required>
+            
+            <label for="marks4">Marks for Subject 4:</label>
+            <input type="number" id="marks4" placeholder="Enter marks for subject 4" required>
+            
+            <label for="marks5">Marks for Subject 5:</label>
+            <input type="number" id="marks5" placeholder="Enter marks for subject 5" required>
+            
+            <label for="whatsappNumber">WhatsApp Number:</label>
+            <input type="text" id="whatsappNumber" placeholder="Enter WhatsApp number (e.g., +919876543210)" required>
+            
+            <button type="button" onclick="addStudent()">Submit</button>
+        </form>
+        
+        <table id="studentTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Register Number</th>
+                    <th>Department</th>
+                    <th>Subject 1</th>
+                    <th>Subject 2</th>
+                    <th>Subject 3</th>
+                    <th>Subject 4</th>
+                    <th>Subject 5</th>
+                    <th>Total Marks</th>
+                    <th>Average Marks</th>
+                    <th>Status</th>
+                    <th>Grade</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be added dynamically here -->
+            </tbody>
+        </table>
+    </main>
+
+    <script>
+        function addStudent() {
+            const name = document.getElementById("name").value.trim();
+            const registerNumber = document.getElementById("registerNumber").value.trim();
+            const department = document.getElementById("department").value.trim();
+            const marks1 = parseInt(document.getElementById("marks1").value.trim());
+            const marks2 = parseInt(document.getElementById("marks2").value.trim());
+            const marks3 = parseInt(document.getElementById("marks3").value.trim());
+            const marks4 = parseInt(document.getElementById("marks4").value.trim());
+            const marks5 = parseInt(document.getElementById("marks5").value.trim());
+            const whatsappNumber = document.getElementById("whatsappNumber").value.trim();
+
+            if (!name || !registerNumber || !department || isNaN(marks1) || isNaN(marks2) || isNaN(marks3) || isNaN(marks4) || isNaN(marks5) || !whatsappNumber) {
+                alert("All fields are required and marks should be valid numbers!");
+                return;
+            }
+
+            const totalMarks = marks1 + marks2 + marks3 + marks4 + marks5;
+            const averageMarks = totalMarks / 5;
+
+            const hasFailedSubject = marks1 < 45 || marks2 < 45 || marks3 < 45 || marks4 < 45 || marks5 < 45;
+            const status = hasFailedSubject ? "Fail" : "Pass";
+            let grade;
+            if (averageMarks >= 90) grade = "O";
+            else if (averageMarks >= 80) grade = "A+";
+            else if (averageMarks >= 70) grade = "A";
+            else if (averageMarks >= 60) grade = "B";
+            else grade = "C";
+
+            const tableBody = document.getElementById("studentTable").querySelector("tbody");
+            const newRow = document.createElement("tr");
+            newRow.innerHTML = `
+                <td>${name}</td>
+                <td>${registerNumber}</td>
+                <td>${department}</td>
+                <td>${marks1}</td>
+                <td>${marks2}</td>
+                <td>${marks3}</td>
+                <td>${marks4}</td>
+                <td>${marks5}</td>
+                <td>${totalMarks}</td>
+                <td>${averageMarks.toFixed(2)}</td>
+                <td>${status}</td>
+                <td>${grade}</td>
+            `;
+            tableBody.appendChild(newRow);
+
+            // Generate and open WhatsApp link
+            sendWhatsAppMessage(name, registerNumber, department, marks1, marks2, marks3, marks4, marks5, totalMarks, averageMarks, status, grade, whatsappNumber);
+
+            document.getElementById("studentForm").reset();
+        }
+
+        function sendWhatsAppMessage(name, registerNumber, department, marks1, marks2, marks3, marks4, marks5, totalMarks, averageMarks, status, grade, whatsappNumber) {
+            const message = `Student Information:\n\n` +
+                            `Name: ${name}\n` +
+                            `Register Number: ${registerNumber}\n` +
+                            `Department: ${department}\n` +
+                            `Marks for Subject 1: ${marks1}\n` +
+                            `Marks for Subject 2: ${marks2}\n` +
+                            `Marks for Subject 3: ${marks3}\n` +
+                            `Marks for Subject 4: ${marks4}\n` +
+                            `Marks for Subject 5: ${marks5}\n` +
+                            `Total Marks: ${totalMarks}\n` +
+                            `Average Marks: ${averageMarks.toFixed(2)}\n` +
+                            `Status: ${status}\n` +
+                            `Grade: ${grade}\n`;
+
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+
+            // Open WhatsApp link automatically
+            window.location.href = whatsappLink;
+        }
+    </script>
+</body>
+</html>
